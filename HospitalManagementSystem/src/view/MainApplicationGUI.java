@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import view.AppointmentManagement.AppointmentListGUI;
+import view.AppointmentManagement.EditAppointmentGUI;
 import view.medicalRecordManagement.RecordApplicationGUI;
 import view.patientManagement.PatientApplicationGUI;
 
@@ -27,6 +29,7 @@ public class MainApplicationGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+
 					MainApplicationGUI frame = new MainApplicationGUI();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -79,6 +82,7 @@ public class MainApplicationGUI extends JFrame {
 		btnAppointmentManagement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//appointment
+				//will be add soon ;)
 			}
 		});
 		btnAppointmentManagement.setBounds(131, 179, 209, 39);
