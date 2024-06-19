@@ -9,24 +9,30 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.http.HttpStatus;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import org.json.JSONObject;
+
+import controller.MakeHttpRequest;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.net.http.HttpResponse;
 
 
 public class AddAppointmentGUI extends JFrame{
 
-	private JTextField patientNameFld;
-	private JTextField doctorNameFld;
-	String [] hours = new String[]{ "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", 
+	private JTextField patientIDFld;
+	private JTextField doctorIDFld;
+	String [] hours = new String[]{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
 			"11", "12"};
 	String [] minutes = new String[]{ "00", "30" };
 	String [] meridiem = new String[]{ "AM", "PM" };
@@ -48,11 +54,13 @@ public class AddAppointmentGUI extends JFrame{
 	JLabel doctorLabel;
 	JTextArea purposeFld;
 	JButton addBtn;
+	private MakeHttpRequest req;
 
 	/**
 	 * Create the frame
 	 */
 	public AddAppointmentGUI() {
+		req = new MakeHttpRequest();
 		initialize();
 	}
 
@@ -102,11 +110,11 @@ public class AddAppointmentGUI extends JFrame{
 		getContentPane().add(patientLabel);
 		
 		// Patient Name Field
-		patientNameFld = new JTextField();
-		patientNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
-		patientNameFld.setBounds(139, 89, 148, 21);
-		getContentPane().add(patientNameFld);
-		patientNameFld.setColumns(10);
+		patientIDFld = new JTextField();
+		patientIDFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
+		patientIDFld.setBounds(139, 89, 148, 21);
+		getContentPane().add(patientIDFld);
+		patientIDFld.setColumns(10);
 		
 		// Start Time Label
 		startTimeLabel = new JLabel("Start Time: ");
@@ -190,11 +198,11 @@ public class AddAppointmentGUI extends JFrame{
 		getContentPane().add(doctorLabel);
 		
 		// Doctor Name Field
-		doctorNameFld = new JTextField();
-		doctorNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
-		doctorNameFld.setBounds(40, 289, 148, 19);
-		getContentPane().add(doctorNameFld);
-		doctorNameFld.setColumns(10);
+		doctorIDFld = new JTextField();
+		doctorIDFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
+		doctorIDFld.setBounds(40, 289, 148, 19);
+		getContentPane().add(doctorIDFld);
+		doctorIDFld.setColumns(10);
 		
 		// Purpose Label
 		purposeLabel = new JLabel("Purpose:");
@@ -216,18 +224,44 @@ public class AddAppointmentGUI extends JFrame{
 
 		addBtn.addActionListener(e -> {
 			// Add Appointment
-			String patientName = patientNameFld.getText();
-			String doctorName = doctorNameFld.getText();
+			String patientID = patientIDFld.getText();
+			String doctorID = doctorIDFld.getText();
 			String purpose = purposeFld.getText();
-			String startTime = startHourCB.getSelectedItem() + ":" + startMinuteCB.getSelectedItem() + " " + startMeridiemCB.getSelectedItem();
-			String endTime = endHourCB.getSelectedItem() + ":" + endMinuteCB.getSelectedItem() + " " + endMeridiemCB.getSelectedItem();
+			String startTime;
+			if (startMeridiemCB.getSelectedItem().equals("PM")) {
+				startTime = (Integer.parseInt((String) startHourCB.getSelectedItem()) + 12) + ":" + startMinuteCB.getSelectedItem();
+			} else {
+				startTime = startHourCB.getSelectedItem().toString() + ":" + startMinuteCB.getSelectedItem().toString();
+			}
+			String endTime;
+			if (endMeridiemCB.getSelectedItem() == "PM") {
+				endTime = (Integer.parseInt((String) endHourCB.getSelectedItem()) + 12) + ":" + endMinuteCB.getSelectedItem();
+			} else {
+				endTime = endHourCB.getSelectedItem() + ":" + endMinuteCB.getSelectedItem();
+			}
 			String date = datePicker.getJFormattedTextField().getText();
-			System.out.println("Patient Name: " + patientName);
-			System.out.println("Doctor Name: " + doctorName);
-			System.out.println("Purpose: " + purpose);
-			System.out.println("Start Time: " + startTime);
-			System.out.println("End Time: " + endTime);
-			System.out.println("Date: " + date);
+			if(patientID.isEmpty() || doctorID.isEmpty() || purpose.isEmpty() || date.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Please fill in all the fields!");
+				return;
+			} else {
+				JSONObject jsonParams = new JSONObject();
+				jsonParams.put("patientID", patientID);
+				jsonParams.put("startTime", startTime);
+				jsonParams.put("endTime", endTime);
+				jsonParams.put("date", date);
+				jsonParams.put("doctorID", doctorID);
+				jsonParams.put("purpose", purpose);
+				System.out.println(jsonParams);
+				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/", "POST", jsonParams);
+				if(response.statusCode() == HttpStatus.SC_OK)
+				{
+					JOptionPane.showMessageDialog(null, "New medical record is added successfully!");
+				}else
+				{
+					JOptionPane.showMessageDialog(null, "Internal Server Error...");
+				}
+			}
+			
 		});
 	}
 }

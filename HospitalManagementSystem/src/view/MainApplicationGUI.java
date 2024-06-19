@@ -30,11 +30,8 @@ public class MainApplicationGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EditAppointmentGUI frame = new EditAppointmentGUI();
+					MainApplicationGUI frame = new MainApplicationGUI();
 					frame.setVisible(true);
-
-					//MainApplicationGUI frame = new MainApplicationGUI();
-					//frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -85,6 +82,8 @@ public class MainApplicationGUI extends JFrame {
 		btnAppointmentManagement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//appointment
+				AppointmentListGUI addAppointment = new AppointmentListGUI();
+				addAppointment.setVisible(true);
 			}
 		});
 		btnAppointmentManagement.setBounds(131, 179, 209, 39);

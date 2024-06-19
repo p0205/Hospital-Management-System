@@ -5,21 +5,32 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Properties;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.apache.http.HttpStatus;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import controller.MakeHttpRequest;
+import model.Appointment.Appointment;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.net.http.HttpResponse;
 
 
 public class EditAppointmentGUI extends JFrame{
@@ -49,10 +60,20 @@ public class EditAppointmentGUI extends JFrame{
 	JTextArea purposeFld;
 	JButton addBtn;
 
+	private Appointment appointment;
+	private MakeHttpRequest req;
+	private String[] startTimeParts;
+	private String[] endTimeParts;
+
 	/**
 	 * Create the frame
 	 */
-	public EditAppointmentGUI() {
+	public EditAppointmentGUI(String appointmentID) {
+		req = new MakeHttpRequest();
+		appointment = loadAppointment(appointmentID);
+		appointment.printAppointment();
+		startTimeParts = convertAndStoreTime(appointment.getStartTime());
+		endTimeParts = convertAndStoreTime(appointment.getEndTime());
 		initialize();
 	}
 
@@ -88,8 +109,8 @@ public class EditAppointmentGUI extends JFrame{
         setMinimumSize(new Dimension(450, 250));
 		setBounds(100, 100, 569, 441);
 		
-		// Add Appointment Form
-		appointmentLabel = new JLabel("New Appointment");
+		// Appointment Form
+		appointmentLabel = new JLabel("Appointment");
 		appointmentLabel.setFont(titleFontStyle);
 		appointmentLabel.setBounds(40, 24, 326, 42);
 		getContentPane().add(appointmentLabel);
@@ -105,6 +126,7 @@ public class EditAppointmentGUI extends JFrame{
 		patientNameFld = new JTextField();
 		patientNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		patientNameFld.setBounds(139, 89, 148, 21);
+		patientNameFld.setText(appointment.getPatientName());
 		getContentPane().add(patientNameFld);
 		patientNameFld.setColumns(10);
 		
@@ -118,6 +140,7 @@ public class EditAppointmentGUI extends JFrame{
 		startHourCB = new JComboBox<>(hours);
 		startHourCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		startHourCB.setBounds(139, 143, 60, 17);
+		startHourCB.setSelectedItem(startTimeParts[0]);
 		getContentPane().add(startHourCB);
 		
 		JLabel lblNewLabel_3 = new JLabel(":");
@@ -129,11 +152,13 @@ public class EditAppointmentGUI extends JFrame{
 		startMinuteCB = new JComboBox<>(minutes);
 		startMinuteCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		startMinuteCB.setBounds(213, 143, 60, 17);
+		startMinuteCB.setSelectedItem(startTimeParts[1]);
 		getContentPane().add(startMinuteCB);
 
 		startMeridiemCB = new JComboBox<>(meridiem);
 		startMeridiemCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		startMeridiemCB.setBounds(278, 143, 50, 17);
+		startMeridiemCB.setSelectedItem(startTimeParts[2]);
 		getContentPane().add(startMeridiemCB);
 		
 		// End Time Label
@@ -146,6 +171,7 @@ public class EditAppointmentGUI extends JFrame{
 		endHourCB = new JComboBox<>(hours);
 		endHourCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		endHourCB.setBounds(139, 189, 60, 17);
+		endHourCB.setSelectedItem(endTimeParts[0]);
 		getContentPane().add(endHourCB);
 
 		
@@ -159,11 +185,13 @@ public class EditAppointmentGUI extends JFrame{
 		endMinuteCB = new JComboBox<>(minutes);
 		endMinuteCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		endMinuteCB.setBounds(213, 189, 60, 17);
+		endMinuteCB.setSelectedItem(endTimeParts[1]);
 		getContentPane().add(endMinuteCB);		
 		
 		endMeridiemCB = new JComboBox<>(meridiem);
 		endMeridiemCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		endMeridiemCB.setBounds(278, 189, 50, 17);
+		endMeridiemCB.setSelectedItem(endTimeParts[2]);
 		getContentPane().add(endMeridiemCB);
 		
 		// Date Label
@@ -181,6 +209,7 @@ public class EditAppointmentGUI extends JFrame{
 		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
 		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 		datePicker.setBounds(139, 235, 148, 21);
+		datePicker.getJFormattedTextField().setText(appointment.getDate());
 		getContentPane().add(datePicker);
 		
 		// Doctor Name Label
@@ -193,6 +222,7 @@ public class EditAppointmentGUI extends JFrame{
 		doctorNameFld = new JTextField();
 		doctorNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		doctorNameFld.setBounds(40, 289, 148, 19);
+		doctorNameFld.setText(appointment.getDoctorName());
 		getContentPane().add(doctorNameFld);
 		doctorNameFld.setColumns(10);
 		
@@ -207,6 +237,7 @@ public class EditAppointmentGUI extends JFrame{
 		purposeFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		purposeFld.setLineWrap(true);
 		purposeFld.setBounds(306, 289, 224, 56);
+		purposeFld.setText(appointment.getPurpose());
 		getContentPane().add(purposeFld);
 		
 		// Add Button
@@ -230,4 +261,57 @@ public class EditAppointmentGUI extends JFrame{
 			System.out.println("Date: " + date);
 		});
 	}
+
+	private Appointment loadAppointment(String appointmentID) {
+		System.out.println("Loading appointment with ID: " + appointmentID);
+		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/"+appointmentID, "GET", null);	
+		JSONArray arr;
+		Appointment appointment;
+		if(response.statusCode()== HttpStatus.SC_OK){
+			arr = new JSONArray(response.body());
+			appointment = new Appointment(Integer.toString(arr.getJSONObject(0).getInt("id")), Integer.toString(arr.getJSONObject(0).getInt("patientID")), arr.getJSONObject(0).getString("startTime"), arr.getJSONObject(0).getString("endTime"), convertToDateOnly(arr.getJSONObject(0).getString("date")), Integer.toString(arr.getJSONObject(0).getInt("doctorID")), arr.getJSONObject(0).getString("purpose"));
+        }
+		else{
+			appointment = null;
+		}
+			
+		return appointment;
+	}
+
+	private String convertToDateOnly(String timestamp) {
+        try {
+            // Define the input and output formatters
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            
+            // Parse the input timestamp
+            LocalDateTime dateTime = LocalDateTime.parse(timestamp, inputFormatter);
+            
+            // Format the date portion
+            return dateTime.format(outputFormatter);
+        } catch (DateTimeParseException e) {
+            // Handle the case where the input format is incorrect
+            System.err.println("Invalid date format: " + e.getMessage());
+            return null;
+        }
+    }
+
+	public String[] convertAndStoreTime(String time24) {
+        // Define the input formatter for 24-hour time
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        // Define the output formatter for 12-hour time with AM/PM
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+        // Parse the input time string to a LocalTime object
+        LocalTime time = LocalTime.parse(time24, inputFormatter);
+
+        // Format the time to 12-hour format with AM/PM
+        String time12 = time.format(outputFormatter);
+
+        // Extract the components
+        String[] timeParts = time12.split("[: ]");
+        
+		return timeParts;
+    }
 }

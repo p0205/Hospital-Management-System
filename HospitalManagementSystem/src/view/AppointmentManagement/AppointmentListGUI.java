@@ -4,10 +4,17 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
+
+import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+
+import controller.MakeHttpRequest;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.http.HttpResponse;
 
 import model.Appointment.Appointment;
 
@@ -17,9 +24,16 @@ public class AppointmentListGUI extends JFrame {
     private JTable jt;
     private Object data[][];
     Appointment list[] = new Appointment[10];
+    private MakeHttpRequest req;
 
-    public AppointmentListGUI() {   
-        data = loadData(list);
+    public AppointmentListGUI() {
+        req = new MakeHttpRequest();
+        JSONArray jsonList = loadAppointment();   
+        list = loadAppointment(jsonList);
+        for (Appointment a: list) {
+            a.printAppointment();
+        }
+        data = loadRow(list);
         initialize();
     }
 
@@ -94,9 +108,10 @@ public class AppointmentListGUI extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Handle edit action
-                        System.out.println("Edit button clicked for row " + rowIndex);
+                        EditAppointmentGUI editAppointment = new EditAppointmentGUI(list[rowIndex].getId());
+                        editAppointment.setVisible(true);
 
-                        list[rowIndex].printAppointment();
+                        //list[rowIndex].printAppointment();
                     }
                 });
 
@@ -104,6 +119,14 @@ public class AppointmentListGUI extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Handle delete action
+                        HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:3000/api/appointments/" + list[rowIndex].getId()), "DELETE", null);
+                        if(response.statusCode()==HttpStatus.SC_OK)
+                        {
+                            JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
+                        }else
+                        {
+                            JOptionPane.showMessageDialog(null,"Something went wrong...");
+                        }
                         System.out.println("Delete button clicked for row " + rowIndex);
                         // Remove the row from data and notify table model of the change
                         Object[][] newData = new Object[data.length - 1][2];
@@ -177,35 +200,32 @@ public class AppointmentListGUI extends JFrame {
     }
     // to here
 
+    //load appointment from server
+    private JSONArray loadAppointment()
+	 {
+		 HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/", "GET", null);	
+		 if(response.statusCode()== HttpStatus.SC_OK)
+			 return new JSONArray(response.body());
+		 return new JSONArray();
+	 }
 
-    //  load data from model
-    public static Object[][] loadData(Appointment list[]){
-        
-        Appointment appointment_1 = new Appointment("1", "Patient_1", "10:00 AM", "11:00 AM", "2021-09-01", "Doctor_1", "Checkup");
-        Appointment appointment_2 = new Appointment("2", "Patient_2", "11:00 AM", "12:00 PM", "2021-09-02", "Doctor_2", "Consultation");
-        Appointment appointment_3 = new Appointment("3", "Patient_3", "12:00 PM", "01:00 PM", "2021-09-03", "Doctor_3", "Follow-up");
-        Appointment appointment_4 = new Appointment("4", "Patient_4", "01:00 PM", "02:00 PM", "2021-09-04", "Doctor_4", "Treatment");
-        Appointment appointment_5 = new Appointment("5", "Patient_5", "02:00 PM", "03:00 PM", "2021-09-05", "Doctor_5", "Surgery");
-        Appointment appointment_6 = new Appointment("6", "Patient_6", "03:00 PM", "04:00 PM", "2021-09-06", "Doctor_6", "Diagnosis");
-        Appointment appointment_7 = new Appointment("7", "Patient_7", "04:00 PM", "05:00 PM", "2021-09-07", "Doctor_7", "Prescription");
-        Appointment appointment_8 = new Appointment("8", "Patient_8", "05:00 PM", "06:00 PM", "2021-09-08", "Doctor_8", "Therapy");
-        Appointment appointment_9 = new Appointment("9", "Patient_9", "06:00 PM", "07:00 PM", "2021-09-09", "Doctor_9", "Counseling");
-        Appointment appointment_10 = new Appointment("10", "Patient_10", "07:00 PM", "08:00 PM", "2021-09-10", "Doctor_10", "Rehabilitation");
-        list[0] = appointment_1;
-        list[1] = appointment_2;
-        list[2] = appointment_3;
-        list[3] = appointment_4;
-        list[4] = appointment_5;
-        list[5] = appointment_6;
-        list[6] = appointment_7;
-        list[7] = appointment_8;
-        list[8] = appointment_9;
-        list[9] = appointment_10;
-            
-        Object data[][] = new Object[10][3];
+     //load JSON list into model 
+    public static Appointment[] loadAppointment(JSONArray jsonList) {
+        Appointment list[] = new Appointment[jsonList.length()];
+        for (int i = 0; i < jsonList.length(); i++) {
+            list[i] = new Appointment(Integer.toString(jsonList.getJSONObject(i).getInt("id")), Integer.toString(jsonList.getJSONObject(i).getInt("patientID")), jsonList.getJSONObject(i).getString("startTime"), jsonList.getJSONObject(i).getString("endTime"), jsonList.getJSONObject(i).getString("date"), Integer.toString(jsonList.getJSONObject(i).getInt("doctorID")), jsonList.getJSONObject(i).getString("purpose"));
+        }
+        return list;
+    }
+
+
+    //  load data from model into table
+    public static Object[][] loadRow(Appointment list[]){
     
-        for (int i = 0; i < 10; i++) {
-            data[i][0] = i;
+        Object data[][] = new Object[list.length][3];
+    
+        for (int i = 0; i < list.length; i++) {
+            data[i][0] = i+1;
             data[i][1] = "Appointment_" + list[i].getId();
             data[i][2] = new Panel();
         }
