@@ -43,6 +43,7 @@ public class AppointmentListGUI extends JFrame {
         setVisible(true);
     }
 
+    // Load icon from file system
     private ImageIcon loadIcon(String fullPath, int width, int height) {
         File file = new File(fullPath);
         if (file.exists()) {
@@ -56,6 +57,8 @@ public class AppointmentListGUI extends JFrame {
         }
     }
 
+    // dunno how these work
+    // dont touch from here pls
     class AppointmentTableModel extends AbstractTableModel {
         @Override
         public int getRowCount() {
@@ -150,7 +153,6 @@ public class AppointmentListGUI extends JFrame {
             return new JPanel();
         }
     }
-
     class ButtonEditor extends DefaultCellEditor {
 
         private JPanel panel;
@@ -173,9 +175,10 @@ public class AppointmentListGUI extends JFrame {
             return panel;
         }
     }
+    // to here
 
 
-
+    //  load data from model
     public static Object[][] loadData(Appointment list[]){
         
         Appointment appointment_1 = new Appointment("1", "Patient_1", "10:00 AM", "11:00 AM", "2021-09-01", "Doctor_1", "Checkup");
