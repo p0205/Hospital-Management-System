@@ -219,8 +219,12 @@ public class AddAppointmentGUI extends JFrame{
 		
 		// Add Button
 		addBtn = new JButton("Add");
-		addBtn.setBounds(445, 366, 85, 21);
+		addBtn.setBounds(325, 366, 85, 21);
 		getContentPane().add(addBtn);
+
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setBounds(420, 366, 85, 21);
+		getContentPane().add(cancelButton);
 
 		addBtn.addActionListener(e -> {
 			// Add Appointment
@@ -256,12 +260,23 @@ public class AddAppointmentGUI extends JFrame{
 				if(response.statusCode() == HttpStatus.SC_OK)
 				{
 					JOptionPane.showMessageDialog(null, "New medical record is added successfully!");
+
+					getContentPane().setVisible(false);
+					AppointmentListGUI appointmentListGUI = new AppointmentListGUI();
+					appointmentListGUI.setVisible(true);
 				}else
 				{
 					JOptionPane.showMessageDialog(null, "Internal Server Error...");
 				}
 			}
 			
+		});
+
+		cancelButton.addActionListener(e -> {
+			dispose();
+			getContentPane().setVisible(false);
+			AppointmentListGUI appointmentListGUI = new AppointmentListGUI();
+			appointmentListGUI.setVisible(true);
 		});
 	}
 }

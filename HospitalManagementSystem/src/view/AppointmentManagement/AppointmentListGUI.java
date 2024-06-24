@@ -17,6 +17,7 @@ import java.io.File;
 import java.net.http.HttpResponse;
 
 import model.Appointment.Appointment;
+import view.MainApplicationGUI;
 
 public class AppointmentListGUI extends JFrame {
 
@@ -44,6 +45,25 @@ public class AppointmentListGUI extends JFrame {
         setMinimumSize(new Dimension(450, 250));
         setBounds(100, 100, 600, 400);
 
+        JPanel northPane = new JPanel();
+        northPane.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JLabel appointmentLabel = new JLabel("Appointment List");
+        appointmentLabel.setFont(new Font("Arial", Font.BOLD, 24));
+
+        JButton btnBack = new JButton("");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				MainApplicationGUI appGUI = new MainApplicationGUI();
+				appGUI.setVisible(true);
+			}
+		});
+		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		btnBack.setIcon(backImage);
+        northPane.add(btnBack);
+        northPane.add(Box.createRigidArea(new Dimension(50, 0)));
+        northPane.add(appointmentLabel);
+
         JPanel centerPane = new JPanel();
         centerPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         jt = new JTable(new AppointmentTableModel());
@@ -53,8 +73,31 @@ public class AppointmentListGUI extends JFrame {
         JScrollPane sp = new JScrollPane(jt);
         centerPane.add(sp);
 
+        JPanel southPane = new JPanel();
+        southPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnAdd = new JButton("Add Appointment");
+        btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getContentPane().setVisible(false);
+                AddAppointmentGUI addAppointment = new AddAppointmentGUI();
+                addAppointment.setVisible(true);
+            }
+        });
+        southPane.add(btnAdd);
+
+        getContentPane().add(northPane, BorderLayout.NORTH);
         getContentPane().add(centerPane, BorderLayout.CENTER);
+        getContentPane().add(southPane, BorderLayout.SOUTH);
         setVisible(true);
+    }
+
+    private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+		    
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
+        Image originalImage = originalIcon.getImage();
+        Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
     }
 
     // Load icon from file system
@@ -108,10 +151,9 @@ public class AppointmentListGUI extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Handle edit action
+                        getContentPane().setVisible(false);
                         EditAppointmentGUI editAppointment = new EditAppointmentGUI(list[rowIndex].getId());
                         editAppointment.setVisible(true);
-
-                        //list[rowIndex].printAppointment();
                     }
                 });
 
@@ -144,9 +186,9 @@ public class AppointmentListGUI extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Handle view action
-                        System.out.println("View button clicked for row " + rowIndex);
-                    
-                        list[rowIndex].printAppointment();
+                        getContentPane().setVisible(false);
+                        ViewAppointmentGUI viewAppointment = new ViewAppointmentGUI(list[rowIndex].getId());
+                        viewAppointment.setVisible(true);
                     }
                 });
 

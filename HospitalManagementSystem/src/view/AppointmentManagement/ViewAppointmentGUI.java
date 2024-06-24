@@ -34,7 +34,7 @@ import java.awt.Font;
 import java.net.http.HttpResponse;
 
 
-public class EditAppointmentGUI extends JFrame{
+public class ViewAppointmentGUI extends JFrame{
 
 	private JTextField patientNameFld;
 	private JTextField doctorNameFld;
@@ -69,7 +69,7 @@ public class EditAppointmentGUI extends JFrame{
 	/**
 	 * Create the frame
 	 */
-	public EditAppointmentGUI(String appointmentID) {
+	public ViewAppointmentGUI(String appointmentID) {
 		req = new MakeHttpRequest();
 		appointment = loadAppointment(appointmentID);
 		appointment.printAppointment();
@@ -129,6 +129,7 @@ public class EditAppointmentGUI extends JFrame{
 		patientNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		patientNameFld.setBounds(139, 89, 148, 21);
 		patientNameFld.setText(appointment.getPatientName());
+        patientNameFld.setEditable(false);
 		getContentPane().add(patientNameFld);
 		patientNameFld.setColumns(10);
 		
@@ -143,6 +144,7 @@ public class EditAppointmentGUI extends JFrame{
 		startHourCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		startHourCB.setBounds(139, 143, 60, 17);
 		startHourCB.setSelectedItem(startTimeParts[0]);
+        startHourCB.setEditable(false);
 		getContentPane().add(startHourCB);
 		
 		JLabel lblNewLabel_3 = new JLabel(":");
@@ -155,12 +157,14 @@ public class EditAppointmentGUI extends JFrame{
 		startMinuteCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		startMinuteCB.setBounds(213, 143, 60, 17);
 		startMinuteCB.setSelectedItem(startTimeParts[1]);
+        startMinuteCB.setEditable(false);
 		getContentPane().add(startMinuteCB);
 
 		startMeridiemCB = new JComboBox<>(meridiem);
 		startMeridiemCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		startMeridiemCB.setBounds(278, 143, 50, 17);
 		startMeridiemCB.setSelectedItem(startTimeParts[2]);
+        startMeridiemCB.setEditable(false);
 		getContentPane().add(startMeridiemCB);
 		
 		// End Time Label
@@ -174,6 +178,7 @@ public class EditAppointmentGUI extends JFrame{
 		endHourCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		endHourCB.setBounds(139, 189, 60, 17);
 		endHourCB.setSelectedItem(endTimeParts[0]);
+        endHourCB.setEditable(false);
 		getContentPane().add(endHourCB);
 
 		
@@ -188,12 +193,14 @@ public class EditAppointmentGUI extends JFrame{
 		endMinuteCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		endMinuteCB.setBounds(213, 189, 60, 17);
 		endMinuteCB.setSelectedItem(endTimeParts[1]);
+        endMinuteCB.setEditable(false);
 		getContentPane().add(endMinuteCB);		
 		
 		endMeridiemCB = new JComboBox<>(meridiem);
 		endMeridiemCB.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		endMeridiemCB.setBounds(278, 189, 50, 17);
 		endMeridiemCB.setSelectedItem(endTimeParts[2]);
+        endMeridiemCB.setEditable(false);
 		getContentPane().add(endMeridiemCB);
 		
 		// Date Label
@@ -212,6 +219,7 @@ public class EditAppointmentGUI extends JFrame{
 		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 		datePicker.setBounds(139, 235, 148, 21);
 		datePicker.getJFormattedTextField().setText(appointment.getDate());
+        datePicker.getJFormattedTextField().setEditable(false);
 		getContentPane().add(datePicker);
 		
 		// Doctor Name Label
@@ -225,6 +233,7 @@ public class EditAppointmentGUI extends JFrame{
 		doctorNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
 		doctorNameFld.setBounds(40, 289, 148, 19);
 		doctorNameFld.setText(appointment.getDoctorName());
+        doctorNameFld.setEditable(false);
 		getContentPane().add(doctorNameFld);
 		doctorNameFld.setColumns(10);
 		
@@ -240,12 +249,8 @@ public class EditAppointmentGUI extends JFrame{
 		purposeFld.setLineWrap(true);
 		purposeFld.setBounds(306, 289, 224, 56);
 		purposeFld.setText(appointment.getPurpose());
+        purposeFld.setEditable(false);
 		getContentPane().add(purposeFld);
-		
-		// Upadate Button
-		updateBtn = new JButton("Update");
-		updateBtn.setBounds(325, 366, 85, 21);
-		getContentPane().add(updateBtn);
 
 		//Cancel Button
 		JButton cancelBtn = new JButton("Cancel");
@@ -256,51 +261,6 @@ public class EditAppointmentGUI extends JFrame{
 			this.dispose();
 			AppointmentListGUI appointmentList = new AppointmentListGUI();
 			appointmentList.setVisible(true);
-		});
-
-		updateBtn.addActionListener(e -> {
-			//Update Patient
-			String patientID = patientNameFld.getText();
-			String doctorID = doctorNameFld.getText();
-			String purpose = purposeFld.getText();
-			String startTime;
-			if (startMeridiemCB.getSelectedItem().equals("PM")) {
-				startTime = (Integer.parseInt((String) startHourCB.getSelectedItem()) + 12) + ":" + startMinuteCB.getSelectedItem();
-			} else {
-				startTime = startHourCB.getSelectedItem().toString() + ":" + startMinuteCB.getSelectedItem().toString();
-			}
-			String endTime;
-			if (endMeridiemCB.getSelectedItem() == "PM") {
-				endTime = (Integer.parseInt((String) endHourCB.getSelectedItem()) + 12) + ":" + endMinuteCB.getSelectedItem();
-			} else {
-				endTime = endHourCB.getSelectedItem() + ":" + endMinuteCB.getSelectedItem();
-			}
-			String date = datePicker.getJFormattedTextField().getText();
-			if(patientID.isEmpty() || doctorID.isEmpty() || purpose.isEmpty() || date.isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Please fill in all the fields!");
-				return;
-			} else {
-				JSONObject jsonParams = new JSONObject();
-				jsonParams.put("patientID", patientID);
-				jsonParams.put("startTime", startTime);
-				jsonParams.put("endTime", endTime);
-				jsonParams.put("date", date);
-				jsonParams.put("doctorID", doctorID);
-				jsonParams.put("purpose", purpose);
-				System.out.println(jsonParams);
-				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/"+appointment.getId(), "PATCH", jsonParams);
-				if(response.statusCode() == HttpStatus.SC_OK)
-				{
-					JOptionPane.showMessageDialog(null, "Medical record is updated successfully!");
-
-					getContentPane().setVisible(false);
-					AppointmentListGUI appointmentListGUI = new AppointmentListGUI();
-					appointmentListGUI.setVisible(true);
-				}else
-				{
-					JOptionPane.showMessageDialog(null, "Internal Server Error...");
-				}
-			}
 		});
 	}
 
