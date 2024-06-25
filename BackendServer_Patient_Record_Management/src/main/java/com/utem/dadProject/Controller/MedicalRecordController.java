@@ -120,7 +120,7 @@ public class MedicalRecordController {
 	    }
 	}
 
-	@GetMapping("/{patientID}/{recordID}/update")
+	@PatchMapping("/{patientID}/{recordID}/update")
 	public ResponseEntity<MedicalRecordDTO> updateRecord(@PathVariable int patientID, @PathVariable int recordID, @RequestBody MedicalRecordDTO recordDTO) {
 	    try {
 	       Patient patient  = patientService.findPatient(recordDTO.getPatientID());
