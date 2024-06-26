@@ -55,11 +55,13 @@ public class AddAppointmentGUI extends JFrame{
 	JTextArea purposeFld;
 	JButton addBtn;
 	private MakeHttpRequest req;
+	String accessToken;
 
 	/**
 	 * Create the frame
 	 */
-	public AddAppointmentGUI() {
+	public AddAppointmentGUI(String accessToken) {
+		this.accessToken = accessToken;
 		req = new MakeHttpRequest();
 		initialize();
 	}
@@ -104,7 +106,7 @@ public class AddAppointmentGUI extends JFrame{
 		
 
 		// Patient Name Label
-		patientLabel = new JLabel("Patient Name: ");
+		patientLabel = new JLabel("Patient Id: ");
 		patientLabel.setFont(bodyFontStyle);
 		patientLabel.setBounds(40, 85, 94, 24);
 		getContentPane().add(patientLabel);
@@ -192,7 +194,7 @@ public class AddAppointmentGUI extends JFrame{
 		getContentPane().add(datePicker);
 		
 		// Doctor Name Label
-		doctorLabel = new JLabel("Doctor Name:");
+		doctorLabel = new JLabel("Doctor Id:");
 		doctorLabel.setFont(bodyFontStyle);
 		doctorLabel.setBounds(40, 271, 94, 13);
 		getContentPane().add(doctorLabel);
@@ -256,13 +258,13 @@ public class AddAppointmentGUI extends JFrame{
 				jsonParams.put("doctorID", doctorID);
 				jsonParams.put("purpose", purpose);
 				System.out.println(jsonParams);
-				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/", "POST", jsonParams);
-				if(response.statusCode() == HttpStatus.SC_OK)
+				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/", "POST", jsonParams, accessToken);
+				if(response.statusCode() == HttpStatus.SC_CREATED)
 				{
 					JOptionPane.showMessageDialog(null, "New medical record is added successfully!");
 
 					getContentPane().setVisible(false);
-					AppointmentListGUI appointmentListGUI = new AppointmentListGUI();
+					AppointmentListGUI appointmentListGUI = new AppointmentListGUI(accessToken);
 					appointmentListGUI.setVisible(true);
 				}else
 				{
@@ -275,7 +277,7 @@ public class AddAppointmentGUI extends JFrame{
 		cancelButton.addActionListener(e -> {
 			dispose();
 			getContentPane().setVisible(false);
-			AppointmentListGUI appointmentListGUI = new AppointmentListGUI();
+			AppointmentListGUI appointmentListGUI = new AppointmentListGUI(accessToken);
 			appointmentListGUI.setVisible(true);
 		});
 	}

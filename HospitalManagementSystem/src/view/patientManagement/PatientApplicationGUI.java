@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import view.MainApplicationGUI;
+import view.MenuGUI;
 
 import java.awt.Font;
 import java.awt.Image;
@@ -16,13 +17,14 @@ public class PatientApplicationGUI extends JFrame{
 
 
 	private static final long serialVersionUID = 1L;
-
+	private String accessToken;
 
 
 	/**
 	 * Create the application.
 	 */
-	public PatientApplicationGUI() {
+	public PatientApplicationGUI(String accessToken) {
+		this.accessToken = accessToken;
 		initialize();
 	}
 
@@ -44,7 +46,7 @@ public class PatientApplicationGUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				
 				dispose();
-				RegisterPatientGUI registerGUI = new RegisterPatientGUI();
+				RegisterPatientGUI registerGUI = new RegisterPatientGUI(accessToken);
 				registerGUI.setVisible(true);
 			}
 		});
@@ -67,7 +69,7 @@ public class PatientApplicationGUI extends JFrame{
 		btnDeletePatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				DeletePatientGUI deleteGUI = new DeletePatientGUI();
+				DeletePatientGUI deleteGUI = new DeletePatientGUI(accessToken);
 				deleteGUI.setVisible(true);
 			}
 		});
@@ -78,7 +80,7 @@ public class PatientApplicationGUI extends JFrame{
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				MainApplicationGUI appGUI = new MainApplicationGUI();
+				MenuGUI appGUI = new MenuGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});

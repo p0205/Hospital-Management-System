@@ -29,11 +29,14 @@ public class RegisterPatientGUI extends JFrame {
 	private JTextField phoneTxtFld;
 	private JTextField emailTxtFld;
 	private MakeHttpRequest req= new MakeHttpRequest();
+	private String accessToken;
 
 	/**
 	 * Create the frame.
 	 */
-	public RegisterPatientGUI() {
+	public RegisterPatientGUI(String accessToken) {
+		this.accessToken = accessToken;
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -108,7 +111,7 @@ public class RegisterPatientGUI extends JFrame {
 		        else
 		        {
 		        	try {
-						 HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/patient/add", "POST", jsonParams);
+						 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/add", "POST", jsonParams, accessToken);
 						 
 						 if(response.statusCode()==HttpStatus.SC_OK)
 							 JOptionPane.showMessageDialog(null,"New patient is added successfully!");
@@ -131,7 +134,7 @@ public class RegisterPatientGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				PatientApplicationGUI appGUI = new PatientApplicationGUI();
+				PatientApplicationGUI appGUI = new PatientApplicationGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});

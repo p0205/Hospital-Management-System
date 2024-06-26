@@ -36,8 +36,8 @@ import java.net.http.HttpResponse;
 
 public class ViewAppointmentGUI extends JFrame{
 
-	private JTextField patientNameFld;
-	private JTextField doctorNameFld;
+	private JTextField patientIdFld;
+	private JTextField doctorIdFld;
 	String [] hours = new String[]{ "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", 
 			"11", "12"};
 	String [] minutes = new String[]{ "00", "30" };
@@ -66,10 +66,13 @@ public class ViewAppointmentGUI extends JFrame{
 	private String[] startTimeParts;
 	private String[] endTimeParts;
 
+	private String accessToken;
+
 	/**
 	 * Create the frame
 	 */
-	public ViewAppointmentGUI(String appointmentID) {
+	public ViewAppointmentGUI(String appointmentID, String accessToken) {
+		this.accessToken = accessToken;
 		req = new MakeHttpRequest();
 		appointment = loadAppointment(appointmentID);
 		appointment.printAppointment();
@@ -119,19 +122,19 @@ public class ViewAppointmentGUI extends JFrame{
 		
 
 		// Patient Name Label
-		patientLabel = new JLabel("Patient Name: ");
+		patientLabel = new JLabel("Patient Id: ");
 		patientLabel.setFont(bodyFontStyle);
 		patientLabel.setBounds(40, 85, 94, 24);
 		getContentPane().add(patientLabel);
 		
 		// Patient Name Field
-		patientNameFld = new JTextField();
-		patientNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
-		patientNameFld.setBounds(139, 89, 148, 21);
-		patientNameFld.setText(appointment.getPatientName());
-        patientNameFld.setEditable(false);
-		getContentPane().add(patientNameFld);
-		patientNameFld.setColumns(10);
+		patientIdFld = new JTextField();
+		patientIdFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
+		patientIdFld.setBounds(139, 89, 148, 21);
+		patientIdFld.setText(appointment.getPatientName());
+        patientIdFld.setEditable(false);
+		getContentPane().add(patientIdFld);
+		patientIdFld.setColumns(10);
 		
 		// Start Time Label
 		startTimeLabel = new JLabel("Start Time: ");
@@ -229,13 +232,13 @@ public class ViewAppointmentGUI extends JFrame{
 		getContentPane().add(doctorLabel);
 		
 		// Doctor Name Field
-		doctorNameFld = new JTextField();
-		doctorNameFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
-		doctorNameFld.setBounds(40, 289, 148, 19);
-		doctorNameFld.setText(appointment.getDoctorName());
-        doctorNameFld.setEditable(false);
-		getContentPane().add(doctorNameFld);
-		doctorNameFld.setColumns(10);
+		doctorIdFld = new JTextField();
+		doctorIdFld.setFont(new Font("Open Sans", Font.PLAIN, 14));
+		doctorIdFld.setBounds(40, 289, 148, 19);
+		doctorIdFld.setText(appointment.getDoctorName());
+        doctorIdFld.setEditable(false);
+		getContentPane().add(doctorIdFld);
+		doctorIdFld.setColumns(10);
 		
 		// Purpose Label
 		purposeLabel = new JLabel("Purpose:");
@@ -259,14 +262,14 @@ public class ViewAppointmentGUI extends JFrame{
 
 		cancelBtn.addActionListener(e -> {
 			this.dispose();
-			AppointmentListGUI appointmentList = new AppointmentListGUI();
+			AppointmentListGUI appointmentList = new AppointmentListGUI(accessToken);
 			appointmentList.setVisible(true);
 		});
 	}
 
 	private Appointment loadAppointment(String appointmentID) {
 		System.out.println("Loading appointment with ID: " + appointmentID);
-		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/"+appointmentID, "GET", null);	
+		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/"+appointmentID, "GET", null, accessToken);	
 		JSONArray arr;
 		Appointment appointment;
 		if(response.statusCode()== HttpStatus.SC_OK){

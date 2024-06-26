@@ -46,27 +46,13 @@ public class UpdateRecordGUI extends JFrame {
 	private JSONObject record;
 	private boolean editMode ;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					UpdateRecordGUI frame = new UpdateRecordGUI();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	private String accessToken;
 
 	/**
 	 * Create the frame.
 	 */
-	public UpdateRecordGUI(int patientID, int recordID) {
-		
+	public UpdateRecordGUI(int patientID, int recordID, String accessToken) {
+		this.accessToken = accessToken;
 		this.patientID = patientID;
 		this.recordID = recordID;
 		editMode = false;
@@ -190,7 +176,7 @@ public class UpdateRecordGUI extends JFrame {
 				jsonParams.put("followUpDate",txtFldFollowUpDate.getText());
 				jsonParams.put("doctorID",txtFieldDrID.getText());
 				jsonParams.put("patientID",patientID);
-				HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/medicalRecord/"+patientID+"/"+recordID+"/update","PATCH", jsonParams);
+				HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/"+patientID+"/"+recordID+"/update","PATCH", jsonParams, accessToken);
 				if(response.statusCode()==HttpStatus.SC_OK)
 				{
 					JOptionPane.showMessageDialog(null, "The record is updated successfully!");
@@ -228,7 +214,7 @@ public class UpdateRecordGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				OperationGUI operationGUI = new OperationGUI(patientID);
+				OperationGUI operationGUI = new OperationGUI(patientID, accessToken);
 				operationGUI.setVisible(true);
 			}
 		});
@@ -240,7 +226,7 @@ public class UpdateRecordGUI extends JFrame {
 	
 	private JSONObject getMedicalRecord()
 	{
-		HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/medicalRecord/"+patientID+"/"+recordID,"GET", null);
+		HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/"+patientID+"/"+recordID,"GET", null, accessToken);
 		String jsonString = response.body();
 		JSONObject jsonObj = new JSONObject(jsonString);
 		return jsonObj;

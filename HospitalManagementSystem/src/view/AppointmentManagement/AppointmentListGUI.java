@@ -17,7 +17,7 @@ import java.io.File;
 import java.net.http.HttpResponse;
 
 import model.Appointment.Appointment;
-import view.MainApplicationGUI;
+import view.MenuGUI;
 
 public class AppointmentListGUI extends JFrame {
 
@@ -26,8 +26,10 @@ public class AppointmentListGUI extends JFrame {
     private Object data[][];
     Appointment list[] = new Appointment[10];
     private MakeHttpRequest req;
+    private String accessToken;
 
-    public AppointmentListGUI() {
+    public AppointmentListGUI(String accessToken) {
+        this.accessToken = accessToken;
         req = new MakeHttpRequest();
         JSONArray jsonList = loadAppointment();   
         list = loadAppointment(jsonList);
@@ -54,7 +56,7 @@ public class AppointmentListGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				MainApplicationGUI appGUI = new MainApplicationGUI();
+				MenuGUI appGUI = new MenuGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});
@@ -80,7 +82,7 @@ public class AppointmentListGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 getContentPane().setVisible(false);
-                AddAppointmentGUI addAppointment = new AddAppointmentGUI();
+                AddAppointmentGUI addAppointment = new AddAppointmentGUI(accessToken);
                 addAppointment.setVisible(true);
             }
         });
@@ -152,7 +154,7 @@ public class AppointmentListGUI extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         // Handle edit action
                         getContentPane().setVisible(false);
-                        EditAppointmentGUI editAppointment = new EditAppointmentGUI(list[rowIndex].getId());
+                        EditAppointmentGUI editAppointment = new EditAppointmentGUI(list[rowIndex].getId(),accessToken);
                         editAppointment.setVisible(true);
                     }
                 });
@@ -161,8 +163,8 @@ public class AppointmentListGUI extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Handle delete action
-                        HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:3000/api/appointments/" + list[rowIndex].getId()), "DELETE", null);
-                        if(response.statusCode()==HttpStatus.SC_OK)
+                        HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:5000/api/appointments/" + list[rowIndex].getId()), "DELETE", null, accessToken);
+                        if(response.statusCode()==HttpStatus.SC_ACCEPTED)
                         {
                             JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
                         }else
@@ -187,7 +189,7 @@ public class AppointmentListGUI extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         // Handle view action
                         getContentPane().setVisible(false);
-                        ViewAppointmentGUI viewAppointment = new ViewAppointmentGUI(list[rowIndex].getId());
+                        ViewAppointmentGUI viewAppointment = new ViewAppointmentGUI(list[rowIndex].getId(), accessToken);
                         viewAppointment.setVisible(true);
                     }
                 });
@@ -245,7 +247,7 @@ public class AppointmentListGUI extends JFrame {
     //load appointment from server
     private JSONArray loadAppointment()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:3000/api/appointments/", "GET", null);	
+		 HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/", "GET", null, accessToken);	
 		 if(response.statusCode()== HttpStatus.SC_OK)
 			 return new JSONArray(response.body());
 		 return new JSONArray();
