@@ -151,7 +151,7 @@ public class OperationGUI extends JFrame {
 	        	public void actionPerformed(ActionEvent e) {
 	        		if (JOptionPane.showConfirmDialog(null, "Are you sure to delete this medical record?", "WARNING",
 	        		        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-	        		    //delete record
+	       
 	        			 // Delete record
 	        			HttpResponse<String> response = deleteRecord(recordID);
 	        			if(response.statusCode()== HttpStatus.SC_ACCEPTED)

@@ -68,6 +68,7 @@ public class DeletePatientGUI extends JFrame {
 		IDTxtField.setBounds(154, 34, 165, 26);
 		contentPane.add(IDTxtField);
 		IDTxtField.setColumns(10);
+		System.out.println(IDTxtField.getText());
 		
 		patientTextArea = new JTextArea();
 		patientTextArea.setBounds(56, 70, 349, 115);

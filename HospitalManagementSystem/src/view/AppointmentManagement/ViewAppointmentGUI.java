@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.apache.http.HttpStatus;
@@ -21,7 +20,6 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import controller.MakeHttpRequest;
 import model.Appointment.Appointment;

@@ -80,9 +80,12 @@ public class RecordApplicationGUI extends JFrame {
 						OperationGUI operationGUI = new OperationGUI(patientID, accessToken);
 						operationGUI.setVisible(true);
 					}
-					else
+					else if(response.statusCode() == HttpStatus.SC_NOT_FOUND)
 					{
 						JOptionPane.showMessageDialog(null, "The patient is not found!");
+					}else
+					{
+						JOptionPane.showMessageDialog(null, "Something wents wrong...");
 					}
 				}
 				

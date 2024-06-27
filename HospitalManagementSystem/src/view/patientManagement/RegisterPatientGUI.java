@@ -114,7 +114,7 @@ public class RegisterPatientGUI extends JFrame {
 		        	try {
 						 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/add", "POST", jsonParams, accessToken);
 						 
-						 if(response.statusCode()==HttpStatus.SC_OK)
+						 if(response.statusCode()==HttpStatus.SC_CREATED)
 							 JOptionPane.showMessageDialog(null,"New patient is added successfully!");
 						 else
 							 JOptionPane.showMessageDialog(null,"Something went wrong...");
