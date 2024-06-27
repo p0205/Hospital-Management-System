@@ -5,7 +5,7 @@
 This project involves three main applications:
 
 1. **Patient Registration Application**: Allows users to register new patients, view patient details, update patient details, and delete patients.
-2. **Appointment Scheduling Application**: 
+2. **Appointment Scheduling Application**: Allow users to add new appointment, view appointment list. view appointment details, update appointment details, and delete selected appointment.
 3. **Medical Record Application**: Handles updating, deleting, and viewing patient medical records.
 
 ## Applications 
@@ -24,6 +24,15 @@ This application deals with managing patient medical records. Its functionalitie
 - Updating medical records
 - Deleting medical records
 - Viewing patient medical records
+
+### Appointmment Application
+
+This application deals with managing patient apppointment. Its function include:
+- Add new Appointment
+- View Appointment List
+- View selected appointment details
+- Update selected appointment
+- Delete selected appointment
 
 ## Architecture/Layer Diagram
 
@@ -50,12 +59,20 @@ Unfortunately, without specific details about your architecture and middleware, 
 - Delete patient: `DELETE "/patient/delete/{id}"`
 - Update patient: `PATCH "/patient/update"`
 
+### Appointment Controller
+- Add Appointment: `POST "/api/appointments/"`
+- Retrieve Appointment List: `GET "/api/appointments/"`
+- Retrieve Selected Appointment: `GET "/api/appointments/:id"`
+- Update Selected Appointment: `PATCH "/api/appointments/:id"`
+- Delete Selected Appointment: `DELETE "/api/appointments/:id"`
+
 ## Functions/Features in the Middleware
 The middleware serves as the intermediary for communication between the applications and the database. It provides RESTful endpoints to manage operations related to doctors, patients, and medical records. Key functions/features include:
 
 - Doctor Management: Retrieve doctor details and lists.
 - Medical Record Management: Add, update, retrieve, and delete patient medical records.
 - Patient Management: Add new patients, retrieve patient information, update patient details, and delete patient records.
+- Appointment Management: Add, update, retrieve, and delete patient medical appointment
 
 ## Database and Tables
 ### Doctor Table
@@ -82,3 +99,12 @@ The middleware serves as the intermediary for communication between the applicat
 - Diagnosis (Varchar(100), Required)
 - Treatment (Varchar(100), Required)
 - FollowUpDate (Date)
+
+### Appointment Table 
+- ID (int, Primary Key)
+- PatientID (int, Foreign Key referencing Patient Table)
+- DoctorID (int, Foreign Key referencing Doctor Table)
+- Date (Date, Required)
+- StartTime (Time, Required)
+- EndTime (Time, Required)
+- purpose (Varchar(50))
