@@ -38,12 +38,14 @@ public class DeletePatientGUI extends JFrame {
 	private JButton btnCancel ;
 	private MakeHttpRequest req = new MakeHttpRequest();
 	private JSONObject jsonParams = new JSONObject();
-
+	private String accessToken;
 
 	/**
 	 * Create the frame.
 	 */
-	public DeletePatientGUI() {
+	public DeletePatientGUI(String accessToken) {
+		this.accessToken = accessToken;
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -76,7 +78,7 @@ public class DeletePatientGUI extends JFrame {
 		findBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:8080/patient/" + IDTxtField.getText()), "GET", jsonParams);
+				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/" + IDTxtField.getText()), "GET", jsonParams, accessToken);
 				  if(response.statusCode()==HttpStatus.SC_OK)
 				  {
 					  afterFoundPatient();
@@ -102,7 +104,7 @@ public class DeletePatientGUI extends JFrame {
 		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:8080/patient/delete/" + IDTxtField.getText()), "DELETE", jsonParams);
+				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/delete/" + IDTxtField.getText()), "DELETE", jsonParams, accessToken);
 				  if(response.statusCode()==HttpStatus.SC_OK)
 				  {
 					  JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
@@ -136,7 +138,7 @@ public class DeletePatientGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				PatientApplicationGUI appGUI = new PatientApplicationGUI();
+				PatientApplicationGUI appGUI = new PatientApplicationGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});

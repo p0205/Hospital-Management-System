@@ -8,7 +8,7 @@ import org.apache.http.HttpStatus;
 import java.net.http.HttpResponse;
 
 import controller.MakeHttpRequest;
-import view.MainApplicationGUI;
+import view.MenuGUI;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,10 +29,12 @@ public class RecordApplicationGUI extends JFrame {
 	private JTextField textField;
 	private int patientID;
 	private MakeHttpRequest req;
+	private String accessToken;
 	/**
 	 * Create the frame.
 	 */
-	public RecordApplicationGUI() {
+	public RecordApplicationGUI(String accessToken) {
+		this.accessToken = accessToken;
 		req = new MakeHttpRequest();
 		initialize();
 	}
@@ -70,11 +72,11 @@ public class RecordApplicationGUI extends JFrame {
 				else
 				{
 					patientID = Integer.valueOf(textField.getText());
-					HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/patient/"+patientID, "GET", null);
+					HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/"+patientID, "GET", null, accessToken);
 					if(response.statusCode()==HttpStatus.SC_OK)
 					{
 						dispose();
-						OperationGUI operationGUI = new OperationGUI(patientID);
+						OperationGUI operationGUI = new OperationGUI(patientID, accessToken);
 						operationGUI.setVisible(true);
 					}
 					else
@@ -92,7 +94,7 @@ public class RecordApplicationGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				MainApplicationGUI appGUI = new MainApplicationGUI();
+				MenuGUI appGUI = new MenuGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});

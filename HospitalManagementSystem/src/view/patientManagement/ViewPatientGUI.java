@@ -55,22 +55,7 @@ public class ViewPatientGUI extends JFrame {
 	private boolean editMode;
 	private MakeHttpRequest req; 
 	private String patientId;
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ViewPatientGUI frame = new ViewPatientGUI();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	private String accessToken;
 
 	/**
 	 * Create the frame.
@@ -160,7 +145,7 @@ public class ViewPatientGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 patientId = idTxtField.getText();
 				  JSONObject jsonParams = new JSONObject();
-				  HttpResponse<String> response = req.makeHttpRequest(("http://localhost:8080/patient/" + patientId), "GET", jsonParams);
+				  HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/" + patientId), "GET", jsonParams, accessToken);
 				  if(response.statusCode()==HttpStatus.SC_OK)
 				  {
 					  afterSearch();
@@ -194,7 +179,7 @@ public class ViewPatientGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				PatientApplicationGUI appGUI = new PatientApplicationGUI();
+				PatientApplicationGUI appGUI = new PatientApplicationGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});
@@ -228,7 +213,7 @@ public class ViewPatientGUI extends JFrame {
 				jsonParams.put("address", addressTxtArea.getText());
 				jsonParams.put("phone", phoneTxtFld.getText());
 				jsonParams.put("email", emailTxtFld.getText());
-		        HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/patient/update", "PATCH", jsonParams);
+		        HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/update", "PATCH", jsonParams, accessToken);
 		        if(response.statusCode()==HttpStatus.SC_OK)
 		        {
 		        	JOptionPane.showMessageDialog(null,"The information is updated successfully!");

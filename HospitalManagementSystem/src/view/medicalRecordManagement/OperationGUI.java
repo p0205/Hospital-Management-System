@@ -42,12 +42,13 @@ public class OperationGUI extends JFrame {
 	private JSONObject patient;
 	private JSONArray records;
 
+	private String accessToken;
 	
 	/**
 	 * Create the frame.
 	 */
-	public OperationGUI(int patientID) {
-		
+	public OperationGUI(int patientID, String accessToken) {
+		this.accessToken = accessToken;
 		this.patientID = patientID;
 		req = new MakeHttpRequest();
 		patient = getPatient();
@@ -111,7 +112,7 @@ public class OperationGUI extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		//jump to Add record GUI
         		dispose();
-        		AddRecordGUI addGUI = new AddRecordGUI(patientID);
+        		AddRecordGUI addGUI = new AddRecordGUI(patientID, accessToken);
         		addGUI.setVisible(true);
         	}
         });
@@ -123,7 +124,7 @@ public class OperationGUI extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RecordApplicationGUI appGUI = new RecordApplicationGUI();
+				RecordApplicationGUI appGUI = new RecordApplicationGUI(accessToken);
 				appGUI.setVisible(true);
 			}
 		});
@@ -175,7 +176,7 @@ public class OperationGUI extends JFrame {
 	                // Dispose the current frame and open the update record page
 	                JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 	                currentFrame.dispose();
-	                UpdateRecordGUI updateGUI = new UpdateRecordGUI(patientID, recordID);
+	                UpdateRecordGUI updateGUI = new UpdateRecordGUI(patientID, recordID, accessToken);
 	                updateGUI.setVisible(true);
 	            }
 	        });
@@ -190,7 +191,7 @@ public class OperationGUI extends JFrame {
 	 
 	 private JSONArray loadRecords()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/medicalRecord/" + patientID, "GET", null);	
+		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/" + patientID, "GET", null, accessToken);	
 		 if(response.statusCode()== HttpStatus.SC_OK)
 			 return new JSONArray(response.body());
 		 return new JSONArray();
@@ -198,7 +199,7 @@ public class OperationGUI extends JFrame {
 	 
 	 private JSONObject getPatient()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:8080/patient/" + patientID, "GET", null);
+		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/" + patientID, "GET", null, accessToken);
 		 return new JSONObject(response.body());
 	 }
 	 
@@ -225,7 +226,7 @@ public class OperationGUI extends JFrame {
 
 	  private HttpResponse<String> deleteRecord(int recordID)
 	  {
-		 return req.makeHttpRequest("http://localhost:8080/medicalRecord/" + recordID + "/delete", "DELETE", null);
+		 return req.makeHttpRequest("http://localhost:5000/medicalRecord/" + recordID + "/delete", "DELETE", null, accessToken);
 		  
 	  }
 	  
