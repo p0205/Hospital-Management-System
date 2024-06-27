@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Image;
+import java.net.URL;
 import java.net.http.HttpResponse;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -144,11 +145,23 @@ public class RegisterPatientGUI extends JFrame {
 		btnBack.setIcon(backImage);
 	}
 	
-private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+/* private ImageIcon createResizedIcon(String imagePath, int width, int height) {
 	    
 	    ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
 	    Image originalImage = originalIcon.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	    return new ImageIcon(resizedImage);
-	}
+	} */
+	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+        URL resourceUrl = getClass().getClassLoader().getResource(imagePath);
+        if (resourceUrl != null) {
+            ImageIcon icon = new ImageIcon(resourceUrl);
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        } else {
+            System.err.println("Resource not found: " + imagePath);
+            return new ImageIcon(); // Return an empty icon or a default one if preferred
+        }
+    }
 }

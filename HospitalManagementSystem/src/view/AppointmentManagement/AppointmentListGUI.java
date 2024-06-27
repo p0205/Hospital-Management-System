@@ -1,6 +1,28 @@
 package view.AppointmentManagement;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.net.URL;
+import java.net.http.HttpResponse;
+
+import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -9,24 +31,17 @@ import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 
 import controller.MakeHttpRequest;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.net.http.HttpResponse;
-
 import model.Appointment.Appointment;
 import view.MenuGUI;
 
 public class AppointmentListGUI extends JFrame {
 
-    private String column[] = {"ID", "Appointment", "Action"};
+    private final String column[] = {"ID", "Appointment", "Action"};
     private JTable jt;
     private Object data[][];
     Appointment list[] = new Appointment[10];
-    private MakeHttpRequest req;
-    private String accessToken;
+    private final MakeHttpRequest req;
+    private final String accessToken;
 
     public AppointmentListGUI(String accessToken) {
         this.accessToken = accessToken;
@@ -53,14 +68,12 @@ public class AppointmentListGUI extends JFrame {
         appointmentLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         JButton btnBack = new JButton("");
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				MenuGUI appGUI = new MenuGUI(accessToken);
-				appGUI.setVisible(true);
-			}
-		});
-		ImageIcon backImage = createResizedIcon("resources\\BackButton.png", 25, 25);
+		btnBack.addActionListener((ActionEvent e) -> {
+                    dispose();
+                    MenuGUI appGUI = new MenuGUI(accessToken);
+                    appGUI.setVisible(true);
+        });
+		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
         northPane.add(btnBack);
         northPane.add(Box.createRigidArea(new Dimension(50, 0)));
@@ -78,13 +91,10 @@ public class AppointmentListGUI extends JFrame {
         JPanel southPane = new JPanel();
         southPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         JButton btnAdd = new JButton("Add Appointment");
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getContentPane().setVisible(false);
-                AddAppointmentGUI addAppointment = new AddAppointmentGUI(accessToken);
-                addAppointment.setVisible(true);
-            }
+        btnAdd.addActionListener((ActionEvent e) -> {
+            getContentPane().setVisible(false);
+            AddAppointmentGUI addAppointment = new AddAppointmentGUI(accessToken);
+            addAppointment.setVisible(true);
         });
         southPane.add(btnAdd);
 
@@ -95,13 +105,16 @@ public class AppointmentListGUI extends JFrame {
     }
 
     private ImageIcon createResizedIcon(String imagePath, int width, int height) {
-        System.out.print(imagePath);
-        System.out.println("classpath=" + System.getProperty("java.class.path"));
-        ImageIcon originalIcon = new ImageIcon(getClass().getClassLoader().getResource(imagePath));
-        Image originalImage = originalIcon.getImage();
-        Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(resizedImage);
-        
+        URL resourceUrl = getClass().getClassLoader().getResource(imagePath);
+        if (resourceUrl != null) {
+            ImageIcon icon = new ImageIcon(resourceUrl);
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        } else {
+            System.err.println("Resource not found: " + imagePath);
+            return new ImageIcon(); // Return an empty icon or a default one if preferred
+        }
     }
 
     // Load icon from file system
@@ -137,7 +150,7 @@ public class AppointmentListGUI extends JFrame {
                 JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 
                 // Change this to the full path of your resources
-                String basePath = "C:/Users/User/Desktop/java/dadproj/HospitalManagementSystem/src/resources/";  
+                String basePath = "C:\\Users\\User\\Desktop\\java\\dad_proj\\Hospital-Management-System\\HospitalManagementSystem\\src\\resources\\";  
                 int buttonSize = 30;
                 JButton editButton = new JButton(loadIcon(basePath + "edit.png", buttonSize, buttonSize));
                 JButton deleteButton = new JButton(loadIcon(basePath + "delete.png", buttonSize, buttonSize));
@@ -151,49 +164,40 @@ public class AppointmentListGUI extends JFrame {
                 panel.add(deleteButton);
                 panel.add(viewButton);
 
-                editButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle edit action
-                        getContentPane().setVisible(false);
-                        EditAppointmentGUI editAppointment = new EditAppointmentGUI(list[rowIndex].getId(),accessToken);
-                        editAppointment.setVisible(true);
-                    }
+                editButton.addActionListener((ActionEvent e) -> {
+                    // Handle edit action
+                    getContentPane().setVisible(false);
+                    EditAppointmentGUI editAppointment = new EditAppointmentGUI(list[rowIndex].getId(),accessToken);
+                    editAppointment.setVisible(true);
                 });
 
-                deleteButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle delete action
-                        HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:5000/api/appointments/" + list[rowIndex].getId()), "DELETE", null, accessToken);
-                        if(response.statusCode()==HttpStatus.SC_ACCEPTED)
-                        {
-                            JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
-                        }else
-                        {
-                            JOptionPane.showMessageDialog(null,"Something went wrong...");
-                        }
-                        System.out.println("Delete button clicked for row " + rowIndex);
-                        // Remove the row from data and notify table model of the change
-                        Object[][] newData = new Object[data.length - 1][2];
-                        for (int i = 0, j = 0; i < data.length; i++) {
-                            if (i != rowIndex) {
-                                newData[j++] = data[i];
-                            }
-                        }
-                        data = newData;
-                        fireTableRowsDeleted(rowIndex, rowIndex);
+                deleteButton.addActionListener((ActionEvent e) -> {
+                    // Handle delete action
+                    HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:5000/api/appointments/" + list[rowIndex].getId()), "DELETE", null, accessToken);
+                    if(response.statusCode()==HttpStatus.SC_ACCEPTED)
+                    {
+                        JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
+                    }else
+                    {
+                        JOptionPane.showMessageDialog(null,"Something went wrong...");
                     }
+                    System.out.println("Delete button clicked for row " + rowIndex);
+                    // Remove the row from data and notify table model of the change
+                    Object[][] newData = new Object[data.length - 1][2];
+                    for (int i = 0, j = 0; i < data.length; i++) {
+                        if (i != rowIndex) {
+                            newData[j++] = data[i];
+                        }
+                    }
+                    data = newData;
+                    fireTableRowsDeleted(rowIndex, rowIndex);
                 });
 
-                viewButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle view action
-                        getContentPane().setVisible(false);
-                        ViewAppointmentGUI viewAppointment = new ViewAppointmentGUI(list[rowIndex].getId(), accessToken);
-                        viewAppointment.setVisible(true);
-                    }
+                viewButton.addActionListener((ActionEvent e) -> {
+                    // Handle view action
+                    getContentPane().setVisible(false);
+                    ViewAppointmentGUI viewAppointment = new ViewAppointmentGUI(list[rowIndex].getId(), accessToken);
+                    viewAppointment.setVisible(true);
                 });
 
                 return panel;
@@ -216,8 +220,8 @@ public class AppointmentListGUI extends JFrame {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (value instanceof JPanel) {
-                return (JPanel) value;
+            if (value instanceof JPanel jPanel) {
+                return jPanel;
             }
             return new JPanel();
         }
@@ -232,8 +236,8 @@ public class AppointmentListGUI extends JFrame {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if (value instanceof JPanel) {
-                panel = (JPanel) value;
+            if (value instanceof JPanel jPanel) {
+                panel = jPanel;
                 return panel;
             }
             return new JPanel();

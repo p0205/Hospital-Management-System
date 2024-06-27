@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.net.http.HttpResponse;
 import java.awt.event.ActionEvent;
 
@@ -105,7 +106,7 @@ public class DeletePatientGUI extends JFrame {
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/delete/" + IDTxtField.getText()), "DELETE", jsonParams, accessToken);
-				  if(response.statusCode()==HttpStatus.SC_OK)
+				  if(response.statusCode()==HttpStatus.SC_ACCEPTED)
 				  {
 					  JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
 					  reset();
@@ -121,11 +122,9 @@ public class DeletePatientGUI extends JFrame {
 		contentPane.add(btnDelete);
 		
 		btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				reset();
-			}
-		});
+		btnCancel.addActionListener((ActionEvent e) -> {
+                    reset();
+                });
 		btnCancel.setBounds(284, 226, 117, 29);
 		btnCancel.setVisible(false);
 		btnCancel.setEnabled(false);
@@ -135,13 +134,11 @@ public class DeletePatientGUI extends JFrame {
 		JButton btnBack = new JButton("");
 		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				PatientApplicationGUI appGUI = new PatientApplicationGUI(accessToken);
-				appGUI.setVisible(true);
-			}
-		});
+		btnBack.addActionListener((ActionEvent e) -> {
+                    dispose();
+                    PatientApplicationGUI appGUI = new PatientApplicationGUI(accessToken);
+                    appGUI.setVisible(true);
+                });
 		
 		btnBack.setBounds(17, 2, 30, 29);
 		contentPane.add(btnBack);
@@ -189,11 +186,23 @@ public class DeletePatientGUI extends JFrame {
 	}
 	
 	
-	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+	/* private ImageIcon createResizedIcon(String imagePath, int width, int height) {
 	    
 	    ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
 	    Image originalImage = originalIcon.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	    return new ImageIcon(resizedImage);
-	}
+	} */
+	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+        URL resourceUrl = getClass().getClassLoader().getResource(imagePath);
+        if (resourceUrl != null) {
+            ImageIcon icon = new ImageIcon(resourceUrl);
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        } else {
+            System.err.println("Resource not found: " + imagePath);
+            return new ImageIcon(); // Return an empty icon or a default one if preferred
+        }
+    }
 }
