@@ -10,6 +10,10 @@ This project involves three main applications:
 
 ## Applications 
 
+### Authentication Middleware
+
+This middleware is responsible for administrator login and register. It could encrypt user password and generate JWT access token to access other applications API. It act as the communication media between different backend appplication api and frontend application.  
+
 ### Patient Registration Application
 
 This application is responsible for managing patient information. Users can perform the following actions:
@@ -36,11 +40,14 @@ This application deals with managing patient apppointment. Its function include:
 
 ## Architecture/Layer Diagram
 
-Unfortunately, without specific details about your architecture and middleware, I can't provide a detailed diagram. However, you should include diagrams showcasing the architecture and layers of each application, including any middleware components.
+Overall Architecture
+![architecture_diagram-Page-1 drawio](https://github.com/p0205/Hospital-Management-System/assets/63178114/d83553dc-7119-49a7-85d8-731b961626ab)
 
 ## List of URL Endpoints
 
 ### Middleware - RESTful
+- Administrator login: `POST "/api/login"`
+- Administrator register: `POST "/api/register"`
 
 #### Doctor Controller
 - Retrieve doctor: `GET "/doctor/{doctorID}"`
@@ -67,7 +74,7 @@ Unfortunately, without specific details about your architecture and middleware, 
 - Delete Selected Appointment: `DELETE "/api/appointments/:id"`
 
 ## Functions/Features in the Middleware
-The middleware serves as the intermediary for communication between the applications and the database. It provides RESTful endpoints to manage operations related to doctors, patients, and medical records. Key functions/features include:
+The middleware provide authentication using jwt access token, and user encryption and serves as the intermediary for communication between the applications and the database. It provides RESTful endpoints to manage operations related to doctors, patients, and medical records. Key functions/features include:
 
 - Doctor Management: Retrieve doctor details and lists.
 - Medical Record Management: Add, update, retrieve, and delete patient medical records.
