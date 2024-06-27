@@ -1,15 +1,10 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import view.AppointmentManagement.AddAppointmentGUI;
 import view.AppointmentManagement.AppointmentListGUI;
-import view.AppointmentManagement.EditAppointmentGUI;
-import view.Authentication.LoginGUI;
 import view.medicalRecordManagement.RecordApplicationGUI;
 import view.patientManagement.PatientApplicationGUI;
 

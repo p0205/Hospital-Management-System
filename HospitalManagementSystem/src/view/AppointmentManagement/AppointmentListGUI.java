@@ -60,7 +60,7 @@ public class AppointmentListGUI extends JFrame {
 				appGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources\\BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
         northPane.add(btnBack);
         northPane.add(Box.createRigidArea(new Dimension(50, 0)));
@@ -95,11 +95,13 @@ public class AppointmentListGUI extends JFrame {
     }
 
     private ImageIcon createResizedIcon(String imagePath, int width, int height) {
-		    
-        ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
+        System.out.print(imagePath);
+        System.out.println("classpath=" + System.getProperty("java.class.path"));
+        ImageIcon originalIcon = new ImageIcon(getClass().getClassLoader().getResource(imagePath));
         Image originalImage = originalIcon.getImage();
         Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImage);
+        
     }
 
     // Load icon from file system
