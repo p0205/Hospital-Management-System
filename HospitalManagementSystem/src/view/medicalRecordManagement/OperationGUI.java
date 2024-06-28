@@ -110,14 +110,19 @@ public class OperationGUI extends JFrame {
 
         
         JButton btnAddRecord = new JButton("+");
-        btnAddRecord.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		//jump to Add record GUI
-        		dispose();
-        		AddRecordGUI addGUI = new AddRecordGUI(patientID, accessToken);
-        		addGUI.setVisible(true);
-        	}
+btnAddRecord.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        // Ensure Swing components are updated on the EDT
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                dispose();
+                AddRecordGUI addGUI = new AddRecordGUI(patientID, accessToken);
+                addGUI.setVisible(true);
+            }
         });
+    }
+});
+
         btnAddRecord.setBackground(new Color(147, 147, 147));
         btnAddRecord.setBounds(142, 88, 40, 29);
         contentPane.add(btnAddRecord);
