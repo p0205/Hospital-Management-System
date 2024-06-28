@@ -178,7 +178,7 @@ public class UpdateRecordGUI extends JFrame {
 				jsonParams.put("followUpDate",txtFldFollowUpDate.getText());
 				jsonParams.put("doctorID",txtFieldDrID.getText());
 				jsonParams.put("patientID",patientID);
-				HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/"+patientID+"/"+recordID+"/update","PATCH", jsonParams, accessToken);
+				HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/medicalRecord/"+patientID+"/"+recordID+"/update","PATCH", jsonParams, accessToken);
 				if(response.statusCode()==HttpStatus.SC_OK)
 				{
 					JOptionPane.showMessageDialog(null, "The record is updated successfully!");
@@ -220,7 +220,7 @@ public class UpdateRecordGUI extends JFrame {
 				operationGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 		btnBack.setBounds(6, 0, 29, 29);
 		contentPane.add(btnBack);
@@ -228,7 +228,7 @@ public class UpdateRecordGUI extends JFrame {
 	
 	private JSONObject getMedicalRecord()
 	{
-		HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/"+patientID+"/"+recordID,"GET", null, accessToken);
+		HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/medicalRecord/"+patientID+"/"+recordID,"GET", null, accessToken);
 		String jsonString = response.body();
 		JSONObject jsonObj = new JSONObject(jsonString);
 		return jsonObj;

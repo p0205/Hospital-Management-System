@@ -85,19 +85,20 @@ public class PatientApplicationGUI extends JFrame{
 				appGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 		btnBack.setBounds(6, 6, 29, 29);
 		getContentPane().add(btnBack);
 	}
-	/* private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+	// private ImageIcon createResizedIcon(String imagePath, int width, int height) {
 	    
-	    ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
-	    Image originalImage = originalIcon.getImage();
-	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-	    return new ImageIcon(resizedImage);
-	} */
+	//     ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
+	//     Image originalImage = originalIcon.getImage();
+	//     Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+	//     return new ImageIcon(resizedImage);
+	// } 
 private ImageIcon createResizedIcon(String imagePath, int width, int height) {
+	
         URL resourceUrl = getClass().getClassLoader().getResource(imagePath);
         if (resourceUrl != null) {
             ImageIcon icon = new ImageIcon(resourceUrl);

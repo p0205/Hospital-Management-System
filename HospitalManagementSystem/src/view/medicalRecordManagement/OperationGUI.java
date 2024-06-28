@@ -110,14 +110,19 @@ public class OperationGUI extends JFrame {
 
         
         JButton btnAddRecord = new JButton("+");
-        btnAddRecord.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		//jump to Add record GUI
-        		dispose();
-        		AddRecordGUI addGUI = new AddRecordGUI(patientID, accessToken);
-        		addGUI.setVisible(true);
-        	}
+btnAddRecord.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        // Ensure Swing components are updated on the EDT
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                dispose();
+                AddRecordGUI addGUI = new AddRecordGUI(patientID, accessToken);
+                addGUI.setVisible(true);
+            }
         });
+    }
+});
+
         btnAddRecord.setBackground(new Color(147, 147, 147));
         btnAddRecord.setBounds(142, 88, 40, 29);
         contentPane.add(btnAddRecord);
@@ -130,7 +135,7 @@ public class OperationGUI extends JFrame {
 				appGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
         btnBack.setBounds(6, 3, 29, 29);
         contentPane.add(btnBack);
@@ -151,7 +156,7 @@ public class OperationGUI extends JFrame {
 	        	public void actionPerformed(ActionEvent e) {
 	        		if (JOptionPane.showConfirmDialog(null, "Are you sure to delete this medical record?", "WARNING",
 	        		        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-	        		    //delete record
+	       
 	        			 // Delete record
 	        			HttpResponse<String> response = deleteRecord(recordID);
 	        			if(response.statusCode()== HttpStatus.SC_ACCEPTED)
@@ -193,7 +198,7 @@ public class OperationGUI extends JFrame {
 	 
 	 private JSONArray loadRecords()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/" + patientID, "GET", null, accessToken);	
+		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/medicalRecord/" + patientID, "GET", null, accessToken);	
 		 if(response.statusCode()== HttpStatus.SC_OK)
 			 return new JSONArray(response.body());
 		 return new JSONArray();
@@ -201,7 +206,7 @@ public class OperationGUI extends JFrame {
 	 
 	 private JSONObject getPatient()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/" + patientID, "GET", null, accessToken);
+		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/patient/" + patientID, "GET", null, accessToken);
 		 return new JSONObject(response.body());
 	 }
 	 
@@ -228,7 +233,7 @@ public class OperationGUI extends JFrame {
 
 	  private HttpResponse<String> deleteRecord(int recordID)
 	  {
-		 return req.makeHttpRequest("http://localhost:5000/medicalRecord/" + recordID + "/delete", "DELETE", null, accessToken);
+		 return req.makeHttpRequest("http://localhost:5001/medicalRecord/" + recordID + "/delete", "DELETE", null, accessToken);
 		  
 	  }
 	  

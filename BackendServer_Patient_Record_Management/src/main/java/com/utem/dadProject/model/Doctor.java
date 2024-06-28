@@ -1,4 +1,5 @@
 package com.utem.dadProject.model;
+
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -24,10 +25,12 @@ public class Doctor {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	private String ic_no;
+	private int age;
+	private String department;
 	private String name;
-	private Date dob;
+	private String phone_no;
 	private String address;
-	private String phone;
 	private String email;
 }
 

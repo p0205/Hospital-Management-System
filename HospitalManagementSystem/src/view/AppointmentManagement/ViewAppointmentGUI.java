@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.apache.http.HttpStatus;
@@ -21,7 +20,6 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import controller.MakeHttpRequest;
 import model.Appointment.Appointment;
@@ -269,7 +267,7 @@ public class ViewAppointmentGUI extends JFrame{
 
 	private Appointment loadAppointment(String appointmentID) {
 		System.out.println("Loading appointment with ID: " + appointmentID);
-		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/"+appointmentID, "GET", null, accessToken);	
+		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5001/api/appointments/"+appointmentID, "GET", null, accessToken);	
 		JSONArray arr;
 		Appointment appointment;
 		if(response.statusCode()== HttpStatus.SC_OK){

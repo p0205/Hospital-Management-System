@@ -112,9 +112,9 @@ public class RegisterPatientGUI extends JFrame {
 		        else
 		        {
 		        	try {
-						 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/add", "POST", jsonParams, accessToken);
+						 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/patient/add", "POST", jsonParams, accessToken);
 						 
-						 if(response.statusCode()==HttpStatus.SC_OK)
+						 if(response.statusCode()==HttpStatus.SC_CREATED)
 							 JOptionPane.showMessageDialog(null,"New patient is added successfully!");
 						 else
 							 JOptionPane.showMessageDialog(null,"Something went wrong...");
@@ -141,7 +141,7 @@ public class RegisterPatientGUI extends JFrame {
 		});
 		btnBack.setBounds(19, 4, 29, 29);
 		contentPane.add(btnBack);
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 	}
 	

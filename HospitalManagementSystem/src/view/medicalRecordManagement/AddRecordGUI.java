@@ -149,7 +149,7 @@ public class AddRecordGUI extends JFrame {
 					jsonParams.put("followUpDate", txtFldFollowUpDate.getText());
 					int selectedDoctor = doctorMap.get((String) comboBoxDoctor.getSelectedItem());
 					jsonParams.put("doctorID", selectedDoctor);
-					HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/" + patientID + "/add","POST", jsonParams, accessToken);
+					HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/medicalRecord/" + patientID + "/add","POST", jsonParams, accessToken);
 					if(response.statusCode() == HttpStatus.SC_CREATED)
 					{
 						JOptionPane.showMessageDialog(null, "New medical record is added successfully!");
@@ -172,7 +172,7 @@ public class AddRecordGUI extends JFrame {
 				operationGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 		btnBack.setBounds(6, 3, 29, 29);
 		contentPane.add(btnBack);
@@ -180,7 +180,7 @@ public class AddRecordGUI extends JFrame {
 	
 	private JSONArray loadDoctors()
 	{
-		HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/doctor/","GET", null, accessToken);
+		HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/doctor/","GET", null, accessToken);
 		String jsonString = response.body();
 		return new JSONArray(jsonString);
 	}
