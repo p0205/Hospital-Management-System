@@ -11,6 +11,18 @@
 			"problemMatcher": [],
 			"label": "java (build): Build Workspace",
 			"detail": "$(tools) Build all the Java projects in workspace."
+		},
+		{
+			"type": "java (buildArtifact)",
+			"targetPath": "${workspaceFolder}/${workspaceFolderBasename}.jar",
+			"elements": [
+				"${compileOutput:DAD_Project}",
+				"${dependencies:DAD_Project}",
+				"${compileOutput:HospitalManagementSystem}",
+				"${dependencies:HospitalManagementSystem}"
+			],
+			"problemMatcher": [],
+			"label": "java (buildArtifact): Hospital-Management-System-1"
 		}
 	]
 }

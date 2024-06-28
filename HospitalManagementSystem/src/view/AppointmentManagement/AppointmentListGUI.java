@@ -73,7 +73,7 @@ public class AppointmentListGUI extends JFrame {
                     MenuGUI appGUI = new MenuGUI(accessToken);
                     appGUI.setVisible(true);
         });
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
         northPane.add(btnBack);
         northPane.add(Box.createRigidArea(new Dimension(50, 0)));
@@ -117,19 +117,19 @@ public class AppointmentListGUI extends JFrame {
         }
     }
 
-    // Load icon from file system
-    private ImageIcon loadIcon(String fullPath, int width, int height) {
-        File file = new File(fullPath);
-        if (file.exists()) {
-            ImageIcon icon = new ImageIcon(fullPath);
-            Image img = icon.getImage();
-            Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaledImg);
-        } else {
-            System.err.println("Resource not found: " + fullPath);
-            return new ImageIcon(); // Return an empty icon or a default one if preferred
-        }
-    }
+    // // Load icon from file system
+    // private ImageIcon loadIcon(String fullPath, int width, int height) {
+    //     File file = new File(fullPath);
+    //     if (file.exists()) {
+    //         ImageIcon icon = new ImageIcon(fullPath);
+    //         Image img = icon.getImage();
+    //         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+    //         return new ImageIcon(scaledImg);
+    //     } else {
+    //         System.err.println("Resource not found: " + fullPath);
+    //         return new ImageIcon(); // Return an empty icon or a default one if preferred
+    //     }
+    // }
 
     // dunno how these work
     // dont touch from here pls
@@ -150,11 +150,17 @@ public class AppointmentListGUI extends JFrame {
                 JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 
                 // Change this to the full path of your resources
-                String basePath = "C:\\Users\\User\\Desktop\\java\\dad_proj\\Hospital-Management-System\\HospitalManagementSystem\\src\\resources\\";  
+                // String basePath = "C:\\Users\\User\\Desktop\\java\\dad_proj\\Hospital-Management-System\\HospitalManagementSystem\\src\\resources\\";  
                 int buttonSize = 30;
-                JButton editButton = new JButton(loadIcon(basePath + "edit.png", buttonSize, buttonSize));
-                JButton deleteButton = new JButton(loadIcon(basePath + "delete.png", buttonSize, buttonSize));
-                JButton viewButton = new JButton(loadIcon(basePath + "view.png", buttonSize, buttonSize));
+                ImageIcon editImage = createResizedIcon("resources/edit.png", buttonSize, buttonSize);
+                JButton editButton = new JButton();
+                editButton.setIcon(editImage);
+                ImageIcon deleteImage = createResizedIcon("resources/delete.png", buttonSize, buttonSize);
+                JButton deleteButton = new JButton();
+                deleteButton.setIcon(deleteImage);
+                ImageIcon viewImage = createResizedIcon("resources/view.png", buttonSize, buttonSize);
+                JButton viewButton = new JButton();
+                viewButton.setIcon(viewImage);
 
                 editButton.setPreferredSize(new Dimension(buttonSize, buttonSize));
                 deleteButton.setPreferredSize(new Dimension(buttonSize, buttonSize));
@@ -173,7 +179,7 @@ public class AppointmentListGUI extends JFrame {
 
                 deleteButton.addActionListener((ActionEvent e) -> {
                     // Handle delete action
-                    HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:5000/api/appointments/" + list[rowIndex].getId()), "DELETE", null, accessToken);
+                    HttpResponse <String> response = req.makeHttpRequest(("http://127.0.0.1:5001/api/appointments/" + list[rowIndex].getId()), "DELETE", null, accessToken);
                     if(response.statusCode()==HttpStatus.SC_ACCEPTED)
                     {
                         JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
@@ -253,7 +259,7 @@ public class AppointmentListGUI extends JFrame {
     //load appointment from server
     private JSONArray loadAppointment()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/", "GET", null, accessToken);	
+		 HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5001/api/appointments/", "GET", null, accessToken);	
 		 if(response.statusCode()== HttpStatus.SC_OK)
 			 return new JSONArray(response.body());
 		 return new JSONArray();

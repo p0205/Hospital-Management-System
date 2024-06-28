@@ -80,7 +80,7 @@ public class DeletePatientGUI extends JFrame {
 		findBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/" + IDTxtField.getText()), "GET", jsonParams, accessToken);
+				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5001/patient/" + IDTxtField.getText()), "GET", jsonParams, accessToken);
 				  if(response.statusCode()==HttpStatus.SC_OK)
 				  {
 					  afterFoundPatient();
@@ -106,7 +106,7 @@ public class DeletePatientGUI extends JFrame {
 		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/delete/" + IDTxtField.getText()), "DELETE", jsonParams, accessToken);
+				 HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5001/patient/delete/" + IDTxtField.getText()), "DELETE", jsonParams, accessToken);
 				  if(response.statusCode()==HttpStatus.SC_ACCEPTED)
 				  {
 					  JOptionPane.showMessageDialog(null,"The patient is deleted successfully!");
@@ -133,7 +133,7 @@ public class DeletePatientGUI extends JFrame {
 		
 		
 		JButton btnBack = new JButton("");
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 		btnBack.addActionListener((ActionEvent e) -> {
                     dispose();

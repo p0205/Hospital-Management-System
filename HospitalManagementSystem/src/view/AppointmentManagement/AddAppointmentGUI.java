@@ -258,7 +258,7 @@ public class AddAppointmentGUI extends JFrame{
 				jsonParams.put("doctorID", doctorID);
 				jsonParams.put("purpose", purpose);
 				System.out.println(jsonParams);
-				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/", "POST", jsonParams, accessToken);
+				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5001/api/appointments/", "POST", jsonParams, accessToken);
 				if(response.statusCode() == HttpStatus.SC_CREATED)
 				{
 					JOptionPane.showMessageDialog(null, "New medical record is added successfully!");

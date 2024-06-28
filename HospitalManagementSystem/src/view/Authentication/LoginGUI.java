@@ -76,7 +76,7 @@ public class LoginGUI extends JFrame{
     }
 
     private void login(String username, String password) throws Exception {
-        String apiUrl = "http://localhost:5000/api/login"; // Replace with your API URL
+        String apiUrl = "http://localhost:5001/api/login"; // Replace with your API URL
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");

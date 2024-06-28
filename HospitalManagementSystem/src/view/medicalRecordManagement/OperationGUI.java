@@ -130,7 +130,7 @@ public class OperationGUI extends JFrame {
 				appGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
         btnBack.setBounds(6, 3, 29, 29);
         contentPane.add(btnBack);
@@ -193,7 +193,7 @@ public class OperationGUI extends JFrame {
 	 
 	 private JSONArray loadRecords()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/medicalRecord/" + patientID, "GET", null, accessToken);	
+		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/medicalRecord/" + patientID, "GET", null, accessToken);	
 		 if(response.statusCode()== HttpStatus.SC_OK)
 			 return new JSONArray(response.body());
 		 return new JSONArray();
@@ -201,7 +201,7 @@ public class OperationGUI extends JFrame {
 	 
 	 private JSONObject getPatient()
 	 {
-		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/" + patientID, "GET", null, accessToken);
+		 HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/patient/" + patientID, "GET", null, accessToken);
 		 return new JSONObject(response.body());
 	 }
 	 
@@ -228,7 +228,7 @@ public class OperationGUI extends JFrame {
 
 	  private HttpResponse<String> deleteRecord(int recordID)
 	  {
-		 return req.makeHttpRequest("http://localhost:5000/medicalRecord/" + recordID + "/delete", "DELETE", null, accessToken);
+		 return req.makeHttpRequest("http://localhost:5001/medicalRecord/" + recordID + "/delete", "DELETE", null, accessToken);
 		  
 	  }
 	  

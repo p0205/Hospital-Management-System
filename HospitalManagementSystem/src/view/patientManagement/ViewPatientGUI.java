@@ -147,7 +147,7 @@ public class ViewPatientGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 patientId = idTxtField.getText();
 				  JSONObject jsonParams = new JSONObject();
-				  HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5000/patient/" + patientId), "GET", jsonParams, accessToken);
+				  HttpResponse<String> response = req.makeHttpRequest(("http://localhost:5001/patient/" + patientId), "GET", jsonParams, accessToken);
 				  if(response.statusCode()==HttpStatus.SC_OK)
 				  {
 					  afterSearch();
@@ -186,7 +186,7 @@ public class ViewPatientGUI extends JFrame {
 			}
 		});
 		btnBack.setBounds(19, 4, 29, 29);
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 		
 		btnEdit = new JButton("Edit");
@@ -215,7 +215,7 @@ public class ViewPatientGUI extends JFrame {
 				jsonParams.put("address", addressTxtArea.getText());
 				jsonParams.put("phone", phoneTxtFld.getText());
 				jsonParams.put("email", emailTxtFld.getText());
-		        HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/update", "PATCH", jsonParams, accessToken);
+		        HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/patient/update", "PATCH", jsonParams, accessToken);
 		        if(response.statusCode()==HttpStatus.SC_OK)
 		        {
 		        	JOptionPane.showMessageDialog(null,"The information is updated successfully!");

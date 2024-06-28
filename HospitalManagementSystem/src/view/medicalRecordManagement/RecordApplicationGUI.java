@@ -73,7 +73,7 @@ public class RecordApplicationGUI extends JFrame {
 				else
 				{
 					patientID = Integer.valueOf(textField.getText());
-					HttpResponse<String> response = req.makeHttpRequest("http://localhost:5000/patient/"+patientID, "GET", null, accessToken);
+					HttpResponse<String> response = req.makeHttpRequest("http://localhost:5001/patient/"+patientID, "GET", null, accessToken);
 					if(response.statusCode()==HttpStatus.SC_OK)
 					{
 						dispose();
@@ -102,7 +102,7 @@ public class RecordApplicationGUI extends JFrame {
 				appGUI.setVisible(true);
 			}
 		});
-		ImageIcon backImage = createResizedIcon("/resources/BackButton.png", 25, 25);
+		ImageIcon backImage = createResizedIcon("resources/BackButton.png", 25, 25);
 		btnBack.setIcon(backImage);
 		btnBack.setBounds(6, 3, 29, 29);
 		contentPane.add(btnBack);

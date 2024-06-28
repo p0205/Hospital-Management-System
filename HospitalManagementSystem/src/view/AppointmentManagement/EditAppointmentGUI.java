@@ -291,7 +291,7 @@ public class EditAppointmentGUI extends JFrame{
 				jsonParams.put("doctorID", doctorID);
 				jsonParams.put("purpose", purpose);
 				System.out.println(jsonParams);
-				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/"+appointment.getId(), "PATCH", jsonParams, accessToken);
+				HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5001/api/appointments/"+appointment.getId(), "PATCH", jsonParams, accessToken);
 				if(response.statusCode() == HttpStatus.SC_OK)
 				{
 					JOptionPane.showMessageDialog(null, "Medical record is updated successfully!");
@@ -309,7 +309,7 @@ public class EditAppointmentGUI extends JFrame{
 
 	private Appointment loadAppointment(String appointmentID) {
 		System.out.println("Loading appointment with ID: " + appointmentID);
-		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5000/api/appointments/"+appointmentID, "GET", null, accessToken);	
+		HttpResponse<String> response = req.makeHttpRequest("http://127.0.0.1:5001/api/appointments/"+appointmentID, "GET", null, accessToken);	
 		JSONArray arr;
 		Appointment appointment;
 		if(response.statusCode()== HttpStatus.SC_OK){
