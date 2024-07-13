@@ -44,6 +44,9 @@ This application deals with managing patient apppointment. Its function include:
 Overall Architecture
 ![architecture_diagram-Page-1 drawio](https://github.com/p0205/Hospital-Management-System/assets/63178114/d83553dc-7119-49a7-85d8-731b961626ab)
 
+Aunthentication Middleware Architecture
+![ad-Page-2 drawio](https://github.com/user-attachments/assets/121376f3-687a-49f5-a38e-359a312e599e)
+
 Patient Management Application Architecture
 ![Patient drawio](https://github.com/user-attachments/assets/55d0611b-5ae5-4b8a-8c72-26e08be37409)
 
@@ -53,6 +56,8 @@ Doctor Management Application Architecture
 Medical Record Application Architecture
 ![MR drawio](https://github.com/user-attachments/assets/9c453180-24c1-4784-8aff-e0157c470882)
 
+Appointment Application Architecture
+![ad-Page-1 drawio](https://github.com/user-attachments/assets/bd3fc21e-c83d-4de2-a614-51391152fe75)
 
 ## List of URL Endpoints
 
