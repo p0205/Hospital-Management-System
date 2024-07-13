@@ -4,9 +4,9 @@
 
 This project involves three main applications:
 
-1. **Patient Registration Application**: Allows users to register new patients, view patient details, update patient details, and delete patients.
-2. **Appointment Scheduling Application**: Allow users to add new appointment, view appointment list. view appointment details, update appointment details, and delete selected appointment.
-3. **Medical Record Application**: Handles updating, deleting, and viewing patient medical records.
+1. **Patient Registration Application**: Allows users to register new patients, view patient details, update patient details, and delete patient.
+2. **Appointment Scheduling Application**: Allow users to add new appointment, view appointment list, view appointment details, update appointment details, and delete selected appointment.
+3. **Medical Record Application**: Allow users to add new medical record, view, update and delete medical record.
 
 ## Applications 
 
@@ -25,15 +25,16 @@ This application is responsible for managing patient information. Users can perf
 ### Medical Record Application
 
 This application deals with managing patient medical records. Its functionalities include:
-- Updating medical records
-- Deleting medical records
-- Viewing patient medical records
+- Add new medical record
+- Update medical records
+- Delete medical records
+- View medical records
 
 ### Appointmment Application
 
 This application deals with managing patient apppointment. Its function include:
-- Add new Appointment
-- View Appointment List
+- Add new appointment
+- View appointment list
 - View selected appointment details
 - Update selected appointment
 - Delete selected appointment
@@ -42,6 +43,16 @@ This application deals with managing patient apppointment. Its function include:
 
 Overall Architecture
 ![architecture_diagram-Page-1 drawio](https://github.com/p0205/Hospital-Management-System/assets/63178114/d83553dc-7119-49a7-85d8-731b961626ab)
+
+Patient Management Application Architecture
+![Patient drawio](https://github.com/user-attachments/assets/55d0611b-5ae5-4b8a-8c72-26e08be37409)
+
+Doctor Management Application Architecture
+![doctor drawio](https://github.com/user-attachments/assets/9d2064eb-8a6a-4c20-b087-c462ca34710e)
+
+Medical Record Application Architecture
+![MR drawio](https://github.com/user-attachments/assets/9c453180-24c1-4784-8aff-e0157c470882)
+
 
 ## List of URL Endpoints
 
