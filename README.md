@@ -4,7 +4,7 @@
 
 This project involves three main applications:
 
-1. **Patient Registration Application**: Allows users to register new patients, view patient details, update patient details, and delete patient.
+1. **Patient Registration Application**: Allow users to register new patients, view patient details, update patient details, and delete patient.
 2. **Appointment Scheduling Application**: Allow users to add new appointment, view appointment list, view appointment details, update appointment details, and delete selected appointment.
 3. **Medical Record Application**: Allow users to add new medical record, view, update and delete medical record.
 
