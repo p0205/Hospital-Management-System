@@ -131,3 +131,9 @@ The middleware provide authentication using jwt access token, and user encryptio
 - StartTime (Time, Required)
 - EndTime (Time, Required)
 - purpose (Varchar(50))
+
+### Test User Data: 
+- username : test
+- password : test1234
+
+### Youtube Link: https://youtu.be/FlEpclmWTUI?si=7c638x7DZ-ubdLY3
